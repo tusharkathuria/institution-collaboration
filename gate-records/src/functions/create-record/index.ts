@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'post',
-        path: 'hello',
+        path: 'records',
         request: {
           schema: {
             'application/json': schema
@@ -15,5 +15,10 @@ export default {
         }
       }
     }
-  ]
+  ],
+  iamRoleStatements: [{
+    Effect: "Allow",
+    Action: ["dynamodb:PutItem"],
+    Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECORDS_TABLE}"
+  }]
 }

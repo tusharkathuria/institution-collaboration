@@ -3,7 +3,12 @@
     "baseUrl": ".",
     "paths": {
       "@functions/*": ["src/functions/*"],
-      "@libs/*": ["src/libs/*"]
+      "@libs/*": ["src/libs/*"],
+      "@businessLogic/*": ["src/businessLogic/*"],
+      "@dataLayer/*": ["src/dataLayer/*"],
+      "@models/*": ["src/models/*"],
+      "@requests/*": ["src/requests/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }
