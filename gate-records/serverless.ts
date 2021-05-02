@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { createRecord } from '@functions/index';
+import { createRecord, updateRecord, getRecords, deleteRecord } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'gate-records',
@@ -29,13 +29,13 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      RECORDS_TABLE: "Records-${self:provider.stage}",
-      USER_ID_INDEX: "UserIdIndex"
+      RECORDS_TABLE: "GateRecords-${self:provider.stage}",
+      DATE_INDEX: "DateIndex"
     },
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { createRecord },
+  functions: { createRecord, updateRecord, getRecords, deleteRecord },
   resources: {
     Resources: {
       RecordsDynamoDBTable: {
@@ -45,25 +45,22 @@ const serverlessConfiguration: AWS = {
             AttributeName: "recordId",
             AttributeType: "S"
           }, {
-            AttributeName: "userId",
+            AttributeName: "createdAt",
             AttributeType: "S"
           }, {
-            AttributeName: "createdAt",
+            AttributeName: "date",
             AttributeType: "S"
           }],
           KeySchema: [{
             AttributeName: "recordId",
             KeyType: "HASH"
-          }, {
-            AttributeName: "createdAt",
-            KeyType: "RANGE"
           }],
           BillingMode: "PAY_PER_REQUEST",
           TableName: "${self:provider.environment.RECORDS_TABLE}",
           GlobalSecondaryIndexes: [{
-            IndexName: "${self:provider.environment.USER_ID_INDEX}",
+            IndexName: "${self:provider.environment.DATE_INDEX}",
             KeySchema: [{
-              AttributeName: "userId",
+              AttributeName: "date",
               KeyType: "HASH"
             }, {
               AttributeName: "createdAt",

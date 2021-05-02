@@ -8,9 +8,10 @@ import { createLogger } from '@utils/logger'
 import schema from './schema';
 import { CreateRecordRequest } from '@requests/CreateRecordRequest';
 
-const logger = createLogger('todosDataAccess');
+const logger = createLogger('createRecord');
 
 const createRecordHandler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  logger.info(`Processing event: ${event}`)
   const newRecord: CreateRecordRequest = event.body
 
   if(newRecord.visitor_name.trim() === "") {
@@ -24,9 +25,13 @@ const createRecordHandler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = a
 
   const newItem = await createRecord(newRecord)
 
-  return formatJSONResponse({
+  const response =  formatJSONResponse({
     item: newItem
-  });
+  }, 201);
+
+  logger.info(`Response: ${response}`)
+
+  return response
 }
 
 export const main = middyfy(createRecordHandler);
