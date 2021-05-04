@@ -6,7 +6,8 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'records'
+        path: 'records',
+        cors: true,
       }
     }
   ],

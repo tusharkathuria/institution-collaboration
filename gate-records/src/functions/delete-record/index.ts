@@ -6,7 +6,8 @@ export default {
     {
       http: {
         method: 'delete',
-        path: 'records/{recordId}'
+        path: 'records/{recordId}',
+        cors: true,
       }
     }
   ],
