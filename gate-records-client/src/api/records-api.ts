@@ -4,10 +4,10 @@ import { CreateRecordRequest } from '../types/CreateRecordRequest';
 import Axios from 'axios'
 import { UpdateRecordRequest } from '../types/UpdateRecordRequest';
 
-export async function getRecords(idToken: string): Promise<RecordItem[]> {
+export async function getRecords(idToken: string, date: String): Promise<RecordItem[]> {
   console.log('Fetching records')
 
-  const response = await Axios.get(`${apiEndpoint}/records`, {
+  const response = await Axios.get(`${apiEndpoint}/records?date=${date}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`

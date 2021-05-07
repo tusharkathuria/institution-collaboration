@@ -62,7 +62,7 @@ export class EditRecord extends React.PureComponent<
       }
 
       this.setLoadingState(true)
-      const uploadUrl = await patchRecord(
+      await patchRecord(
         this.props.auth.idToken, this.props.match.params.recordId, {
           visitor_name: this.state.visitorName,
           vehicle_number: this.state.vehicleNumber,

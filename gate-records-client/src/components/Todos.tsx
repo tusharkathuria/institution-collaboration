@@ -1,8 +1,8 @@
 import { History } from 'history'
 import * as React from 'react'
+import DatePicker from "react-date-picker"
 import {
   Button,
-  Checkbox,
   Divider,
   Grid,
   Header,
@@ -22,6 +22,7 @@ interface RecordProps {
 }
 
 interface RecordsState {
+  date: Date
   records: RecordItem[]
   visitorName: string
   vehicleNumber: string
@@ -32,6 +33,7 @@ interface RecordsState {
 
 export class Records extends React.PureComponent<RecordProps, RecordsState> {
   state: RecordsState = {
+    date: new Date(),
     records: [],
     visitorName: '',
     vehicleNumber: '',
@@ -58,6 +60,13 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
 
   onEditButtonClick = (recordId: string, record: RecordItem) => {
     this.props.history.push(`/records/${recordId}/edit`, record)
+  }
+
+  onDateChange = (value: any) => {
+    this.setState({
+      date: value
+    })
+    this.fetchRecordsForDate(value.toDateString())
   }
 
   onRecordCreate = async () => {
@@ -95,9 +104,14 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.fetchRecordsForDate(this.state.date.toDateString())
+  }
+
+  async fetchRecordsForDate(date: string) {
     try {
-      const records = await getRecords(this.props.auth.idToken)
+      this.setState({loadingRecords: true})
+      const records = await getRecords(this.props.auth.idToken, date)
       this.setState({
         records,
         loadingRecords: false
@@ -110,7 +124,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
   render() {
     return (
       <div>
-        <Header as="h1">Records</Header>
+        <Header as="h1">Gate entry exit records</Header>
 
         {this.renderCreateRecordInput()}
 
@@ -187,6 +201,14 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
         <Grid.Column width={16}>
           <Divider />
         </Grid.Column>
+        <Grid.Column width={16} textAlign="center">
+          <DatePicker 
+            format="dd-MMM-yyyy"
+            clearIcon={null}
+            value={this.state.date}
+            onChange={this.onDateChange}
+            maxDate={new Date()}/>
+        </Grid.Column>
         {this.state.records.map((record, pos) => {
           return (
             <Grid.Row key={record.recordId}>
@@ -194,7 +216,8 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
                   Visitor name: {record.visitor_name}<br/>
                   Vehicle number: {record.vehicle_number}<br/>
                   Phone number: {record.phone_number}<br/>
-                  Purpose: {record.purpose}
+                  Purpose: {record.purpose}<br/>
+                  Created By: {record.createdBy}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
