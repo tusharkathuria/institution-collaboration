@@ -8,6 +8,7 @@ export default {
         method: 'get',
         path: 'records',
         cors: true,
+        authorizer: "authorize"
       }
     }
   ],

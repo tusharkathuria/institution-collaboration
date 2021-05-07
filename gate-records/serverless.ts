@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { createRecord, updateRecord, getRecords, deleteRecord } from '@functions/index';
+import { authorize, createRecord, updateRecord, getRecords, deleteRecord } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'gate-records',
@@ -35,7 +35,7 @@ const serverlessConfiguration: AWS = {
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { createRecord, updateRecord, getRecords, deleteRecord },
+  functions: { authorize, createRecord, updateRecord, getRecords, deleteRecord },
   resources: {
     Resources: {
       RecordsDynamoDBTable: {

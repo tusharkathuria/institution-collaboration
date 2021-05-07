@@ -7,12 +7,14 @@ import { createRecord } from '@businessLogic/records'
 import { createLogger } from '@utils/logger'
 import schema from './schema';
 import { CreateRecordRequest } from '@requests/CreateRecordRequest';
+import { getUserId } from '../../auth/utils'
 
 const logger = createLogger('createRecord');
 
 const createRecordHandler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   logger.info(`Processing event: ${event}`)
   const newRecord: CreateRecordRequest = event.body
+  const userId = getUserId(event)
 
   if(newRecord.visitor_name.trim() === "") {
     logger.error("Request body has empty name or due date")
@@ -23,7 +25,7 @@ const createRecordHandler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = a
     }
   }
 
-  const newItem = await createRecord(newRecord)
+  const newItem = await createRecord(newRecord, userId)
 
   const response =  formatJSONResponse({
     item: newItem

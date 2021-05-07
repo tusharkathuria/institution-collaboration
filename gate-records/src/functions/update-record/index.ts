@@ -9,6 +9,7 @@ export default {
         method: 'patch',
         path: 'records/{recordId}',
         cors: true,
+        authorizer: "authorize",
         request: {
           schema: {
             'application/json': schema

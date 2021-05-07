@@ -30,7 +30,7 @@ export async function deleteRecord(recordId: String) {
 
 export async function createRecord(
   createRecordRequest: CreateRecordRequest,
-  userId?: string
+  userId: string
 ): Promise<RecordItem> {
 
   const itemId = uuid()

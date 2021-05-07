@@ -8,6 +8,7 @@ export default {
         method: 'delete',
         path: 'records/{recordId}',
         cors: true,
+        authorizer: "authorize"
       }
     }
   ],
