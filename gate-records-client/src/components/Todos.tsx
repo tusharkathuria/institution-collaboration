@@ -23,37 +23,61 @@ interface RecordProps {
 
 interface RecordsState {
   records: RecordItem[]
-  newRecordName: string
+  visitorName: string
+  vehicleNumber: string
+  phoneNumber: string
+  purpose: string
   loadingRecords: boolean
 }
 
 export class Records extends React.PureComponent<RecordProps, RecordsState> {
   state: RecordsState = {
     records: [],
-    newRecordName: '',
+    visitorName: '',
+    vehicleNumber: '',
+    phoneNumber: '',
+    purpose: '',
     loadingRecords: true
   }
 
-  handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newRecordName: event.target.value })
+  handleVisitorNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ visitorName: event.target.value })
   }
 
-  onEditButtonClick = (recordId: string) => {
-    this.props.history.push(`/records/${recordId}/edit`)
+  handleVehicleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ vehicleNumber: event.target.value })
   }
 
-  onRecordCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ phoneNumber: event.target.value })
+  }
+
+  handlePurposeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ purpose: event.target.value })
+  }
+
+  onEditButtonClick = (recordId: string, record: RecordItem) => {
+    this.props.history.push(`/records/${recordId}/edit`, record)
+  }
+
+  onRecordCreate = async () => {
     try {
-      if(this.state.newRecordName.trim() === "") {
-        alert("Can't create record with empty name")
+      if(this.state.visitorName.trim() === "") {
+        alert("Can't create record with empty visitor name")
         return
       }
-      const newRecord = await createRecord({
-        visitor_name: this.state.newRecordName
+      const newRecord = await createRecord(this.props.auth.idToken, {
+        visitor_name: this.state.visitorName,
+        vehicle_number: this.state.vehicleNumber,
+        phone_number: this.state.phoneNumber,
+        purpose: this.state.purpose
       })
       this.setState({
         records: [...this.state.records, newRecord],
-        newRecordName: ''
+        visitorName: '',
+        phoneNumber: '',
+        vehicleNumber: '',
+        purpose: ''
       })
     } catch {
       alert('Record creation failed')
@@ -62,7 +86,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
 
   onRecordDelete = async (recordId: string) => {
     try {
-      await deleteRecord(recordId)
+      await deleteRecord(this.props.auth.idToken, recordId)
       this.setState({
         records: this.state.records.filter(record => record.recordId != recordId)
       })
@@ -73,7 +97,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
 
   async componentDidMount() {
     try {
-      const records = await getRecords()
+      const records = await getRecords(this.props.auth.idToken)
       this.setState({
         records,
         loadingRecords: false
@@ -97,26 +121,45 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
 
   renderCreateRecordInput() {
     return (
-      <Grid.Row>
-        <Grid.Column width={16}>
+      <Grid columns="equal">
+        <Grid.Column>
           <Input
-            action={{
-              color: 'teal',
-              labelPosition: 'left',
-              icon: 'add',
-              content: 'New record',
-              onClick: this.onRecordCreate
-            }}
-            fluid
-            actionPosition="left"
-            placeholder="New record"
-            onChange={this.handleNameChange}
+            value={this.state.visitorName}
+            placeholder="Visitor name"
+            onChange={this.handleVisitorNameChange}
           />
         </Grid.Column>
-        <Grid.Column width={16}>
-          <Divider />
+        <Grid.Column>
+          <Input
+            value={this.state.vehicleNumber}
+            placeholder="Vehicle number"
+            onChange={this.handleVehicleNumberChange}
+          />
         </Grid.Column>
-      </Grid.Row>
+        <Grid.Column>
+          <Input
+            value={this.state.phoneNumber}
+            placeholder="Phone number"
+            onChange={this.handlePhoneChange}
+          />
+        </Grid.Column>
+        <Grid.Column>
+          <Input
+            value={this.state.purpose}
+            placeholder="Purpose"
+            onChange={this.handlePurposeChange}
+          />
+        </Grid.Column>
+        <Grid.Column>
+          <Button
+            color="teal"
+            labelPosition="left"
+            icon="add"
+            content="New Record"
+            onClick={this.onRecordCreate}
+          />
+        </Grid.Column>
+      </Grid>
     )
   }
 
@@ -141,17 +184,23 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
   renderRecordsList() {
     return (
       <Grid padded>
+        <Grid.Column width={16}>
+          <Divider />
+        </Grid.Column>
         {this.state.records.map((record, pos) => {
           return (
             <Grid.Row key={record.recordId}>
-              <Grid.Column width={10} verticalAlign="middle">
-                {record.visitor_name}
+              <Grid.Column width={14} verticalAlign="middle">
+                  Visitor name: {record.visitor_name}<br/>
+                  Vehicle number: {record.vehicle_number}<br/>
+                  Phone number: {record.phone_number}<br/>
+                  Purpose: {record.purpose}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(record.recordId)}
+                  onClick={() => this.onEditButtonClick(record.recordId, record)}
                 >
                   <Icon name="pencil" />
                 </Button>
