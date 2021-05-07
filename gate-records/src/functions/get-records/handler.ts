@@ -3,7 +3,7 @@ import 'source-map-support/register';
 import type { Handler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
-import { getAllRecordsForToday } from '@businessLogic/records'
+import { getAllRecordsForDate } from '@businessLogic/records'
 import { createLogger } from '@utils/logger'
 
 const logger = createLogger('getRecords');
@@ -11,7 +11,7 @@ const logger = createLogger('getRecords');
 const getRecordHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event) => {
   logger.info(`Processing event: ${event}`)
   
-  const records = await getAllRecordsForToday()
+  const records = await getAllRecordsForDate(event.queryStringParameters.date)
 
   const response =  formatJSONResponse({
     items: records

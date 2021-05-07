@@ -9,8 +9,9 @@ import { RecordUpdate } from '@models/RecordUpdate';
 
 const recordAccess = new RecordAccess()
 
-export async function getAllRecordsForToday(): Promise<RecordItem[]> {
-  return recordAccess.getAllRecordsForDate(new Date().toDateString())
+export async function getAllRecordsForDate(date?: string): Promise<RecordItem[]> {
+  const selectedDate = date || new Date().toDateString()
+  return recordAccess.getAllRecordsForDate(selectedDate)
 }
 
 export async function updateRecord(recordId: String, updateRequestBody: UpdateRecordRequest) {
@@ -36,8 +37,6 @@ export async function createRecord(
   const itemId = uuid()
   const date = new Date()
 
-  userId = userId || "dummy"
-
   return await recordAccess.createRecord({
     userId,
     recordId: itemId,
@@ -46,6 +45,7 @@ export async function createRecord(
     visitor_name: createRecordRequest.visitor_name,
     phone_number: createRecordRequest.phone_number,
     vehicle_number: createRecordRequest.vehicle_number,
-    purpose: createRecordRequest.purpose
+    purpose: createRecordRequest.purpose,
+    createdBy: userId
   })
 }

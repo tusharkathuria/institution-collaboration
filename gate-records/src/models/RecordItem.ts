@@ -6,5 +6,6 @@ export interface RecordItem {
     visitor_name: string,
     phone_number?: string,
     vehicle_number?: string,
-    purpose?: string
+    purpose?: string,
+    createdBy: string
 }
