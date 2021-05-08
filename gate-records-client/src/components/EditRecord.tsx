@@ -3,6 +3,7 @@ import { Form, Button } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
 import { patchRecord, getUploadUrl, uploadFile } from '../api/records-api'
 import { RecordItem } from '../types/Record'
+import { UpdateRecordRequest } from '../types/UpdateRecordRequest'
 
 interface EditRecordProps {
   match: {
@@ -76,18 +77,22 @@ export class EditRecord extends React.PureComponent<
 
       this.setLoadingState(true)
 
+      const updateParams: UpdateRecordRequest = {
+        visitor_name: this.state.visitorName,
+        vehicle_number: this.state.vehicleNumber,
+        phone_number: this.state.phoneNumber,
+        purpose: this.state.purpose,
+        exit_time: this.state.exit_time
+      }
+
       if(this.state.file) {
         const uploadUrl = await getUploadUrl(this.props.auth.idToken, this.props.match.params.recordId)
         await uploadFile(uploadUrl, this.state.file)
       }
-      await patchRecord(
-        this.props.auth.idToken, this.props.match.params.recordId, {
-          visitor_name: this.state.visitorName,
-          vehicle_number: this.state.vehicleNumber,
-          phone_number: this.state.phoneNumber,
-          purpose: this.state.purpose,
-          exit_time: this.state.exit_time
-        })
+      if(this.state.file || this.props.location.state.attachmentUrl) {
+        updateParams.attachmentId = this.props.match.params.recordId
+      }
+      await patchRecord(this.props.auth.idToken, this.props.match.params.recordId, updateParams)
 
       this.setLoadingState(false)
 

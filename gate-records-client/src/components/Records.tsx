@@ -247,7 +247,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
         {this.state.records.map((record, pos) => {
           return (
             <Grid.Row key={record.recordId}>
-              <Grid.Column width={9} verticalAlign="middle">
+              <Grid.Column width={5} verticalAlign="middle">
                   Visitor name: {record.visitor_name}<br/>
                   Vehicle number: {record.vehicle_number}<br/>
                   Phone number: {record.phone_number}<br/>
@@ -255,6 +255,11 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
                   Entry time: {record.createdAt}<br/>
                   Exit time: {record.exit_time}<br/>
                   Created By: {record.createdBy === this.props.auth.userId ? "Me" : record.createdBy}
+              </Grid.Column>
+              <Grid.Column width={4} verticalAlign="middle">
+                {record.attachmentUrl && (
+                  <Image src={record.attachmentUrl} size="small" wrapped />
+                )}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
                 <Button
