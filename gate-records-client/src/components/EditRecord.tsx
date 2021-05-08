@@ -133,7 +133,7 @@ export class EditRecord extends React.PureComponent<
             <input value={this.state.purpose} onChange={this.handlePurposeChange}/>
           </Form.Field>
           <Form.Field>
-            <label>Attach ID proof</label>
+            <label>Attach image</label>
             <input
               type="file"
               accept="image/*"

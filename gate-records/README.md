@@ -88,6 +88,9 @@ Request Body
 
 DELETE `{{url}}/records/{recordId}`
 
+### Generate upload url
+POST `{{url}}/records/{recordId}/attachment`
+
 ## Postman collection
 
 To test in postman, import the postman [collection](./gate-records.postman_collection.js)

@@ -27,7 +27,8 @@ Change the date of date picker to the date for which you want to browse the gate
 
 ### Update record
 
-In case wrong data is entered, record can be updated. To update a record, click on edit button on any row containing record. This will open new screen. Fill/Update all fields in the screen and click update button. Come back to home screen to verify the change
+In case wrong data is entered, record can be updated. To update a record, click on edit button on any row containing record. This will open new screen. Fill/Update all fields in the screen and click update button. Come back to home screen to verify the change.
+If needed, user can also attach image of vehicle/person while updating. Same can be verified on home page after update
 
 ### Exit visitor
 
