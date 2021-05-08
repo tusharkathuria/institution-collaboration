@@ -15,7 +15,7 @@ This will start development server with react app that will interact with [GateR
 
 ## Functionality
 
-User has to login before interacting with app
+User has to login before interacting with app. If you don't see any data, then switch to date 8th May 2021, as that date has some records already created.
 
 ### Creating a record
 
