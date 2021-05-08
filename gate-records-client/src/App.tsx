@@ -6,7 +6,7 @@ import Auth from './auth/Auth'
 import { EditRecord } from './components/EditRecord'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
-import { Records } from './components/Todos'
+import { Records } from './components/Records'
 
 export interface AppProps {}
 

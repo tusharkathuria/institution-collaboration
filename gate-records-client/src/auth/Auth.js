@@ -33,8 +33,8 @@ export default class Auth {
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        console.log('Access token: ', authResult.accessToken)
-        console.log('id token: ', authResult.idToken)
+        // console.log('Access token: ', authResult.accessToken)
+        // console.log('id token: ', authResult.idToken)
         this.setSession(authResult);
       } else if (err) {
         this.history.replace('/');
@@ -61,6 +61,7 @@ export default class Auth {
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
+    this.userId = authResult.idTokenPayload.sub
 
     // navigate to the home route
     this.history.replace('/');

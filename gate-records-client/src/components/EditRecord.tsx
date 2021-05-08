@@ -20,7 +20,8 @@ interface EditRecordState {
   visitorName: string
   vehicleNumber: string
   phoneNumber: string
-  purpose: string
+  purpose: string,
+  exit_time: string
   isLoading: Boolean
 }
 
@@ -33,6 +34,7 @@ export class EditRecord extends React.PureComponent<
     vehicleNumber: this.props.location.state.vehicle_number || "",
     phoneNumber: this.props.location.state.phone_number || "",
     purpose: this.props.location.state.purpose || "",
+    exit_time: this.props.location.state.exit_time || "",
     isLoading: false
   }
 
@@ -67,7 +69,8 @@ export class EditRecord extends React.PureComponent<
           visitor_name: this.state.visitorName,
           vehicle_number: this.state.vehicleNumber,
           phone_number: this.state.phoneNumber,
-          purpose: this.state.purpose
+          purpose: this.state.purpose,
+          exit_time: this.state.exit_time
         })
 
       this.setLoadingState(false)
@@ -121,6 +124,7 @@ export class EditRecord extends React.PureComponent<
       <div>
         {this.state.isLoading === true && <p>Updating record</p>}
         <Button
+          color="teal"
           loading={this.state.isLoading == true}
           type="submit"
         >

@@ -28,7 +28,10 @@ interface RecordsState {
   vehicleNumber: string
   phoneNumber: string
   purpose: string
-  loadingRecords: boolean
+  loadingRecords: boolean,
+  exitingVisitor: string,
+  deletingRecord: string,
+  creatingRecord: boolean
 }
 
 export class Records extends React.PureComponent<RecordProps, RecordsState> {
@@ -39,7 +42,10 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
     vehicleNumber: '',
     phoneNumber: '',
     purpose: '',
-    loadingRecords: true
+    loadingRecords: true,
+    exitingVisitor: "",
+    deletingRecord: "",
+    creatingRecord: false
   }
 
   handleVisitorNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,10 +77,15 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
 
   onRecordCreate = async () => {
     try {
+      if(this.state.date.toDateString() !== new Date().toDateString()) {
+        alert("Can't create record for past dates. Please change the date to today")
+        return
+      }
       if(this.state.visitorName.trim() === "") {
         alert("Can't create record with empty visitor name")
         return
       }
+      this.setState({creatingRecord: true})
       const newRecord = await createRecord(this.props.auth.idToken, {
         visitor_name: this.state.visitorName,
         vehicle_number: this.state.vehicleNumber,
@@ -82,6 +93,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
         purpose: this.state.purpose
       })
       this.setState({
+        creatingRecord: false,
         records: [...this.state.records, newRecord],
         visitorName: '',
         phoneNumber: '',
@@ -94,21 +106,32 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
   }
 
   onRecordExit = async (record: RecordItem) => {
+    const exitTime = new Date().toISOString()
+
+    this.setState({exitingVisitor: record.recordId})
     await patchRecord(
       this.props.auth.idToken, record.recordId, {
         visitor_name: record.visitor_name,
         vehicle_number: record.vehicle_number,
         phone_number: record.phone_number,
         purpose: record.purpose,
-        exit_time: new Date().toISOString()
-      })
+        exit_time: exitTime
+    })
+
+    record.exit_time = exitTime
+    this.setState({
+      exitingVisitor: "",
+      records: this.state.records
+    })
   }
 
   onRecordDelete = async (recordId: string) => {
     try {
+      this.setState({deletingRecord: recordId})
       await deleteRecord(this.props.auth.idToken, recordId)
       this.setState({
-        records: this.state.records.filter(record => record.recordId != recordId)
+        records: this.state.records.filter(record => record.recordId != recordId),
+        deletingRecord: ""
       })
     } catch {
       alert('Record deletion failed')
@@ -182,6 +205,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
             icon="add"
             content="New Record"
             onClick={this.onRecordCreate}
+            loading={this.state.creatingRecord}
           />
         </Grid.Column>
       </Grid>
@@ -230,12 +254,14 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
                   Purpose: {record.purpose}<br/>
                   Entry time: {record.createdAt}<br/>
                   Exit time: {record.exit_time}<br/>
-                  Created By: {record.createdBy}
+                  Created By: {record.createdBy === this.props.auth.userId ? "Me" : record.createdBy}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
                 <Button
                   color="teal"
                   content="Exit visitor"
+                  loading={this.state.exitingVisitor === record.recordId}
+                  disabled={record.exit_time.trim() !== ""}
                   onClick={() => this.onRecordExit(record)}/>
               </Grid.Column>
               <Grid.Column width={2} floated="right">
@@ -251,6 +277,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
                 <Button
                   icon
                   color="red"
+                  loading={this.state.deletingRecord === record.recordId}
                   onClick={() => this.onRecordDelete(record.recordId)}
                 >
                   <Icon name="delete" />
