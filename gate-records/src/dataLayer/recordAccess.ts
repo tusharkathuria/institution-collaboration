@@ -7,6 +7,7 @@ import { RecordUpdate } from '../models/RecordUpdate'
 import { createLogger } from '../utils/logger';
 
 const logger = createLogger('recordsDataAccess');
+const bucketName = process.env.ATTACHMENTS_BUCKET
 
 const XAWS = AWSXRay.captureAWS(AWS)
 export class RecordAccess {
@@ -56,18 +57,21 @@ export class RecordAccess {
 
   async updateRecord(recordId: String, updateBody: RecordUpdate) {
 
+    const attachmentUrl = updateBody.attachmentId ? `http://${bucketName}.s3.amazonaws.com/${updateBody.attachmentId}` : ""
+
     logger.info(`Updating record for recordId ${recordId}`)
 
     var params = {
         TableName: this.recordsTable,
         Key: { recordId },
-        UpdateExpression: `set visitor_name = :visitor_name, phone_number = :phone_number, vehicle_number = :vehicle_number, purpose = :purpose, exit_time = :exit_time`,
+        UpdateExpression: `set visitor_name = :visitor_name, phone_number = :phone_number, vehicle_number = :vehicle_number, purpose = :purpose, exit_time = :exit_time, attachmentUrl = :attachmentUrl`,
         ExpressionAttributeValues: {
             ':visitor_name' : updateBody.visitor_name,
             ':phone_number': updateBody.phone_number,
             ':vehicle_number': updateBody.vehicle_number,
             ':purpose': updateBody.purpose,
-            ':exit_time': updateBody.exit_time
+            ':exit_time': updateBody.exit_time,
+            ':attachmentUrl': attachmentUrl
         },
         ReturnValues: "ALL_NEW"
     };

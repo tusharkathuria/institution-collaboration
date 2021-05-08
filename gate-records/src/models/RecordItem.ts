@@ -7,5 +7,6 @@ export interface RecordItem {
     phone_number?: string,
     vehicle_number?: string,
     purpose?: string,
-    createdBy: string
+    createdBy: string,
+    attachmentUrl?: string
 }

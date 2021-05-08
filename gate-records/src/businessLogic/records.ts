@@ -20,7 +20,8 @@ export async function updateRecord(recordId: String, updateRequestBody: UpdateRe
     vehicle_number: updateRequestBody.vehicle_number || "",
     phone_number: updateRequestBody.phone_number || "",
     purpose: updateRequestBody.purpose || "",
-    exit_time: updateRequestBody.exit_time || ""
+    exit_time: updateRequestBody.exit_time || "",
+    attachmentId: updateRequestBody.attachmentId || ""
   }
 
   return await recordAccess.updateRecord(recordId, updateBody)

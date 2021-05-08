@@ -3,5 +3,6 @@ export interface UpdateRecordRequest {
     phone_number?: string,
     vehicle_number?: string,
     purpose?: string,
-    exit_time?: string
+    exit_time?: string,
+    attachmentId?: string
 }
