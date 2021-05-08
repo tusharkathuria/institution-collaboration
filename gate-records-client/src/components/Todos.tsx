@@ -93,6 +93,17 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
     }
   }
 
+  onRecordExit = async (record: RecordItem) => {
+    await patchRecord(
+      this.props.auth.idToken, record.recordId, {
+        visitor_name: record.visitor_name,
+        vehicle_number: record.vehicle_number,
+        phone_number: record.phone_number,
+        purpose: record.purpose,
+        exit_time: new Date().toISOString()
+      })
+  }
+
   onRecordDelete = async (recordId: string) => {
     try {
       await deleteRecord(this.props.auth.idToken, recordId)
@@ -212,14 +223,22 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
         {this.state.records.map((record, pos) => {
           return (
             <Grid.Row key={record.recordId}>
-              <Grid.Column width={14} verticalAlign="middle">
+              <Grid.Column width={9} verticalAlign="middle">
                   Visitor name: {record.visitor_name}<br/>
                   Vehicle number: {record.vehicle_number}<br/>
                   Phone number: {record.phone_number}<br/>
                   Purpose: {record.purpose}<br/>
+                  Entry time: {record.createdAt}<br/>
+                  Exit time: {record.exit_time}<br/>
                   Created By: {record.createdBy}
               </Grid.Column>
-              <Grid.Column width={1} floated="right">
+              <Grid.Column width={3} floated="right">
+                <Button
+                  color="teal"
+                  content="Exit visitor"
+                  onClick={() => this.onRecordExit(record)}/>
+              </Grid.Column>
+              <Grid.Column width={2} floated="right">
                 <Button
                   icon
                   color="blue"
@@ -228,7 +247,7 @@ export class Records extends React.PureComponent<RecordProps, RecordsState> {
                   <Icon name="pencil" />
                 </Button>
               </Grid.Column>
-              <Grid.Column width={1} floated="right">
+              <Grid.Column width={2} floated="right">
                 <Button
                   icon
                   color="red"

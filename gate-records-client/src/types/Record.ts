@@ -2,6 +2,7 @@ export interface RecordItem {
   recordId: string,
   userId: string,
   createdAt: string,
+  exit_time: string,
   date: string,
   visitor_name: string,
   phone_number?: string,
