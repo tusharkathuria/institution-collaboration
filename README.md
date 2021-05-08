@@ -7,5 +7,6 @@ Set of services to make it easier to collaborate within an institute
 
 ## Upcoming
 
+- Add test cases and CI workflows
 - Implement android client for [GateRecords](./gate-records/README.md) backend app
 - Add tool to manage roaster of duties. This will help managers/incharges to easily assign duties to individuals in different departments of institute
