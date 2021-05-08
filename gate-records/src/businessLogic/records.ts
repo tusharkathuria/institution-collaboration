@@ -19,7 +19,8 @@ export async function updateRecord(recordId: String, updateRequestBody: UpdateRe
     visitor_name: updateRequestBody.visitor_name || "",
     vehicle_number: updateRequestBody.vehicle_number || "",
     phone_number: updateRequestBody.phone_number || "",
-    purpose: updateRequestBody.purpose || ""
+    purpose: updateRequestBody.purpose || "",
+    exit_time: updateRequestBody.exit_time || ""
   }
 
   return await recordAccess.updateRecord(recordId, updateBody)
@@ -42,6 +43,7 @@ export async function createRecord(
     recordId: itemId,
     createdAt: date.toISOString(),
     date: date.toDateString(),
+    exit_time: "",
     visitor_name: createRecordRequest.visitor_name,
     phone_number: createRecordRequest.phone_number,
     vehicle_number: createRecordRequest.vehicle_number,

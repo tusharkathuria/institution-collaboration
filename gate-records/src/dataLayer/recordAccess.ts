@@ -61,12 +61,13 @@ export class RecordAccess {
     var params = {
         TableName: this.recordsTable,
         Key: { recordId },
-        UpdateExpression: `set visitor_name = :visitor_name, phone_number = :phone_number, vehicle_number = :vehicle_number, purpose = :purpose`,
+        UpdateExpression: `set visitor_name = :visitor_name, phone_number = :phone_number, vehicle_number = :vehicle_number, purpose = :purpose, exit_time = :exit_time`,
         ExpressionAttributeValues: {
             ':visitor_name' : updateBody.visitor_name,
             ':phone_number': updateBody.phone_number,
             ':vehicle_number': updateBody.vehicle_number,
-            ':purpose': updateBody.purpose
+            ':purpose': updateBody.purpose,
+            ':exit_time': updateBody.exit_time
         },
         ReturnValues: "ALL_NEW"
     };
