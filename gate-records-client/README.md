@@ -37,10 +37,11 @@ When visitor exits the campus, this functionality can be used to automatically u
 
 Record can also be deleted. To delete, click on delete button in the row containing record
 
-## Upcoming features/functionality
+## Upcoming features/enhancements
 
 - Rework the UI to a table instead of simple text
 - Add various filters
 - Add search functionality
 - Enable sort by each column of table
 - Show user name instead of user id in `createdBy` field of record
+- Add dorm validation

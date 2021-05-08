@@ -55,19 +55,19 @@ export async function deleteRecord(
   })
 }
 
-// export async function getUploadUrl(
-//   idToken: string,
-//   todoId: string
-// ): Promise<string> {
-//   const response = await Axios.post(`${apiEndpoint}/todos/${todoId}/attachment`, '', {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': `Bearer ${idToken}`
-//     }
-//   })
-//   return response.data.uploadUrl
-// }
+export async function getUploadUrl(
+  idToken: string,
+  recordId: string
+): Promise<string> {
+  const response = await Axios.post(`${apiEndpoint}/records/${recordId}/attachment`, '', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`
+    }
+  })
+  return response.data.uploadUrl
+}
 
-// export async function uploadFile(uploadUrl: string, file: Buffer): Promise<void> {
-//   await Axios.put(uploadUrl, file)
-// }
+export async function uploadFile(uploadUrl: string, file: Buffer): Promise<void> {
+  await Axios.put(uploadUrl, file)
+}

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Form, Button } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import { patchRecord } from '../api/records-api'
+import { patchRecord, getUploadUrl, uploadFile } from '../api/records-api'
 import { RecordItem } from '../types/Record'
 
 interface EditRecordProps {
@@ -22,7 +22,8 @@ interface EditRecordState {
   phoneNumber: string
   purpose: string,
   exit_time: string
-  isLoading: Boolean
+  isLoading: Boolean,
+  file: any
 }
 
 export class EditRecord extends React.PureComponent<
@@ -35,7 +36,8 @@ export class EditRecord extends React.PureComponent<
     phoneNumber: this.props.location.state.phone_number || "",
     purpose: this.props.location.state.purpose || "",
     exit_time: this.props.location.state.exit_time || "",
-    isLoading: false
+    isLoading: false,
+    file: undefined
   }
 
   handleVisitorNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +56,15 @@ export class EditRecord extends React.PureComponent<
     this.setState({ purpose: event.target.value })
   }
 
+  handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files) return
+
+    this.setState({
+      file: files[0]
+    })
+  }
+
   handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
 
@@ -64,6 +75,11 @@ export class EditRecord extends React.PureComponent<
       }
 
       this.setLoadingState(true)
+
+      if(this.state.file) {
+        const uploadUrl = await getUploadUrl(this.props.auth.idToken, this.props.match.params.recordId)
+        await uploadFile(uploadUrl, this.state.file)
+      }
       await patchRecord(
         this.props.auth.idToken, this.props.match.params.recordId, {
           visitor_name: this.state.visitorName,
@@ -110,6 +126,15 @@ export class EditRecord extends React.PureComponent<
           <Form.Field>
             <label>Purpose</label>
             <input value={this.state.purpose} onChange={this.handlePurposeChange}/>
+          </Form.Field>
+          <Form.Field>
+            <label>Attach ID proof</label>
+            <input
+              type="file"
+              accept="image/*"
+              placeholder="Attach ID proof"
+              onChange={this.handleFileChange}
+            />
           </Form.Field>
 
           {this.renderButton()}
