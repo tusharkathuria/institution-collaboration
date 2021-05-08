@@ -39,7 +39,6 @@ export async function createRecord(
   const date = new Date()
 
   return await recordAccess.createRecord({
-    userId,
     recordId: itemId,
     createdAt: date.toISOString(),
     date: date.toDateString(),

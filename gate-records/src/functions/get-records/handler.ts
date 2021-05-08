@@ -10,8 +10,11 @@ const logger = createLogger('getRecords');
 
 const getRecordHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event) => {
   logger.info(`Processing event: ${event}`)
+  logger.info(`QueryStringParameters: ${event.queryStringParameters}`)
   
-  const records = await getAllRecordsForDate(event.queryStringParameters.date)
+  const dateString = (event.queryStringParameters && event.queryStringParameters.date) || new Date().toDateString()
+  logger.info("Date:", dateString)
+  const records = await getAllRecordsForDate(dateString)
 
   const response =  formatJSONResponse({
     items: records

@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "861557f5-9b1f-4a7a-ad87-314f7ba4d796",
+		"name": "Gate Records",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create gate record",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"visitor_name\": \"Tushar\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/records",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update gate record",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"visitor_name\": \"Tushar\",\n    \"vehicle_number\": \"PB36J5361\",\n    \"phone_number\": \"9463993396\",\n    \"purpose\": \"Testing\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/records/f6d6350a-dc6f-4556-b7db-41438bb3c879",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"records",
+						"f6d6350a-dc6f-4556-b7db-41438bb3c879"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get records",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/records",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete gate record",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/records/02366a97-d02a-46fe-95ee-6f78b0f4891b",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"records",
+						"02366a97-d02a-46fe-95ee-6f78b0f4891b"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://pl102hj1e9.execute-api.ap-south-1.amazonaws.com/dev"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
