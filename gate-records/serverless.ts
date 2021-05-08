@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { authorize, createRecord, updateRecord, getRecords, deleteRecord } from '@functions/index';
+import { authorize, createRecord, updateRecord, getRecords, deleteRecord, generateUploadUrl } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'gate-records',
@@ -30,12 +30,14 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       RECORDS_TABLE: "GateRecords-${self:provider.stage}",
-      DATE_INDEX: "DateIndex"
+      DATE_INDEX: "DateIndex",
+      ATTACHMENTS_BUCKET: "629226848507-gate-records-${self:provider.stage}",
+      SIGNED_URL_EXPIRATION: "300",
     },
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { authorize, createRecord, updateRecord, getRecords, deleteRecord },
+  functions: { authorize, createRecord, updateRecord, getRecords, deleteRecord, generateUploadUrl },
   resources: {
     Resources: {
       RecordsDynamoDBTable: {
@@ -70,6 +72,39 @@ const serverlessConfiguration: AWS = {
               ProjectionType: "ALL"
             }
           }]
+        }
+      },
+      AttachmentsBucket: {
+        Type: "AWS::S3::Bucket",
+        Properties: {
+          BucketName: "${self:provider.environment.ATTACHMENTS_BUCKET}",
+          CorsConfiguration: {
+            CorsRules: [{
+              AllowedOrigins: ["*"],
+              AllowedHeaders: ["*"],
+              AllowedMethods: ["GET", "PUT", "POST", "DELETE", "HEAD"],
+              MaxAge: 3000
+            }]
+          }
+        }
+      },
+      BucketPolicy: {
+        Type: "AWS::S3::BucketPolicy",
+        Properties: {
+          PolicyDocument: {
+            Id: "PublicRead",
+            Version: "2012-10-17",
+            Statement: [{
+              Sid: "PublicReadForGetBucketObjects",
+              Effect: "Allow",
+              Principal: '*',
+              Action: 's3:GetObject',
+              Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENTS_BUCKET}/*'
+            }]
+          },
+          Bucket: {
+            Ref: "AttachmentsBucket"
+          }
         }
       }
     }
